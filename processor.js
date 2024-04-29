@@ -126,11 +126,18 @@ class PROCESSOR {
                 cycles--;
                 break;
             case ABSX_LDA:  // ABS X LDA
-                this.A = this.FetchByte(cycles, memory, this.FetchWord(cycles, memory, this.PC) + this.A);
-                if ((this.PC & 0xFF) === 0xFF) { cycles++; }
+                this.A = this.FetchByte(cycles, memory, this.FetchWord(cycles, memory, this.PC) + this.X);
+                if ((this.PC & 0xFF) === 1) { cycles++; }
                 break;
-            default:
-                cycles--; break;
+	    case ABSY_LDA:  // ABS Y LDA
+		this.A = this.FetchByte(cycles, memory, this.FetchWord(cycles, memory, this.PC) + this.Y);
+            case XIND_LDA:  // X IND LDA
+		this.A = this.FetchByte(cycles, memory, this.FetchByte(cycles, memory, this.PC) + this.X);
+	    case INDY_LDA:  // IND Y LDA
+		this.A = this.FetchByte(cycles, memory, (this.FetchByte(cycles, memory, this.PC) << 8) + this.Y);
+	    default:
+                cycles--; 
+                break;
             }
         }
     }
